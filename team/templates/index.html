@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block title %} Index {% endblock %}
+{% block body %}
+    {% if teams %}
+        {% for team in teams %}
+            <div class="card mb-3" style="margin: 15px;padding: 15px;">
+                <div class="row" style="justify-content: space-between;margin-left: 15px;margin-right: 15px;">
+                    <h5 class="card-title">{{ team.name }}</h5>
+                    <p class="card-text">Created by {{ team.creator }}</p>
+                </div>
+                <form action="edit_members/{{ team.id }}" style="text-align: center">
+                    <input style="width:100%;" type="submit" class="btn btn-outline-primary" value="Visit Team">
+                </form>
+            </div>
+        {% endfor %}
+    {% else %}
+        <h3 style="text-align: center;margin-top:40px" >Look's Like There's Nothing here.</h3>
+    {% endif %}
+            <h5 style="text-align: center">Looking to Create a Team? <a href ="create_team" > click here</a></h5>
+        <form class = "form-group" method="POST" action="">
+            {% csrf_token %}
+        </form>
+        </div>
+{% endblock %}

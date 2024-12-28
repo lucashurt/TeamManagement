@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block title %} Register {% endblock %}
+{% block body %}
+    {% if message %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">{{ message }}</div>
+    {% endif %}
+    <h1>Register</h1>
+    <div style="margin: auto; width: 80%">
+    <form action="register" method="POST">
+        {% csrf_token %}
+        <div class="form-group" >
+            <div class="form-row">
+            <input type="text" autofocus class="form-control" id="username" name="username" placeholder="Create Username" required>
+            </div>
+            <div class="form-row">
+            <input type="password" class="form-control" id="password" name="password" placeholder="Create Password" required>
+            </div>
+            <div class="form-row">
+            <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm Password" required>
+            </div>
+            <input type="submit" class="btn btn-primary" value="Register">
+        </div>
+    </form>
+    </div>
+{% endblock %}

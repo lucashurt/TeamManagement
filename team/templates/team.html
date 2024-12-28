@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %} Index {% endblock %}
+{% block body %}
+    <h1 style="text-align: center">{{ team.name }}</h1>
+    <h6 style="text-align: center;margin-top:30px">{{ team.description }}</h6>
+    <h6 style="text-align: center">Created by: {{ team.creator }}</h6>
+    <hr>
+    {% if user in team.admins.all %}
+        <div class="container" id="admin_div">
+            <h3 style="text-align: center">Admin Controls:</h3>
+             <div class="row" style="justify-content:space-around;margin:30px">
+                 <button id="edit_members" class = "btn btn-outline-primary">Edit Members</button>
+                 <button id="create_tasks" class = "btn btn-outline-primary">Create Tasks</button>
+                 <button id="edit_tasks" class = "btn btn-outline-primary">Edit Tasks</button>
+                 <button id="archive_project" class = "btn btn-outline-danger">Archive Project</button>
+            </div>
+        </div>
+    {% endif %}
+
+<div class="container">
+    <div id="edit_container" style="text-align: center;border:0.1px solid grey;border-radius: 10px;padding: 10px;display:none">
+        <div id="add_member">
+            <h3>Add Member?</h3>
+            <div class="form-row" style="justify-content: center">
+                <select style="width:50%;justify-self:center;" class="form-control">
+                <option  value="" disabled selected>Select a friend</option>
+                    {% for friend in friends %}
+                        {% if friend not in members %}
+                            <option value="{{ friend.id }}" selected>{{ friend }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                <input type="button" value="Add Member" id="add_member" class="btn btn-primary">
+                </div>
+            </div>
+            <div id="current_members" style="margin-top:30px">
+                <h3>Current Members:</h3>
+                {% for member in members %}
+                    <div class="row" style="justify-content:space-between;margin:30px">
+                        <span>{{ member.username }}</span>
+                        {% if member not in team.admins.all %}
+                            <button id="delete_member" class = "btn btn-outline-danger">Delete Member</button>
+                         {% else %}
+                            <h6 style="color:deepskyblue"> Admin </h6>
+                        {% endif %}
+                    </div>
+                    <hr>
+                {% endfor %}
+                <hr>
+            </div>
+        </div>
+</div>
+    <script src="{%  static '../static/team.js' %}"> </script>
+{% endblock %}
