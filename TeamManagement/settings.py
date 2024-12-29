@@ -32,7 +32,7 @@ ALLOWED_HOSTS = []
 AUTH_USER_MODEL = 'team.User'
 
 INSTALLED_APPS = [
-    'Team-Management.team',
+    'team',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth import login, authenticate, logout
 from django.urls import reverse
-from team.models import User, Team
+from .models import User, Team
 
 
 # Create your views here.
@@ -14,9 +14,9 @@ def index(request):
         for team in Team.objects.all():
             if team.members.filter(id=user.id).exists():
                 teams.append(team)
-        return render(request, 'templates/index.html', {'teams':teams})
+        return render(request, 'index.html', {'teams':teams})
     else:
-        return render(request, 'templates/register.html')
+        return render(request, 'register.html')
 
 def register(request):
     if request.method == 'POST':
@@ -24,20 +24,20 @@ def register(request):
         password = request.POST['password']
         confirm_password = request.POST['confirm_password']
         if password != confirm_password:
-            return render(request, 'templates/register.html', {
+            return render(request, 'register.html', {
                 "message": "Passwords must match."
             })
         try:
             user = User.objects.create_user(username=username, password=password)
             user.save()
         except IntegrityError:
-            return render(request, 'templates/register.html', {
+            return render(request, 'register.html', {
                 "message": "Username already taken."
             })
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
     else:
-        return render(request, 'templates/register.html')
+        return render(request, 'register.html')
 
 def login_view(request):
     if request.method == 'POST':
@@ -48,11 +48,11 @@ def login_view(request):
             login(request, user)
             return HttpResponseRedirect(reverse("index"))
         else:
-            return render(request, 'templates/login.html', {
+            return render(request, 'login.html', {
                 "message": "Invalid username or password."
             })
     else:
-        return render(request, 'templates/login.html')
+        return render(request, 'login.html')
 
 def logout_view(request):
     logout(request)
@@ -76,12 +76,12 @@ def create_team(request):
         except IntegrityError:
             user = User.objects.get(username=request.user)
             friends = user.friends.exclude(username=user.username)
-            return render(request, "templates/create.html", {"message": "Team name already taken.", "friends":friends})
+            return render(request, "create.html", {"message": "Team name already taken.", "friends":friends})
         return HttpResponseRedirect(reverse("index"))
     else:
         user = User.objects.get(username=request.user)
         friends = user.friends.exclude(username=user.username)
-        return render(request, "templates/create.html", {"friends":friends})
+        return render(request, "create.html", {"friends":friends})
 
 def edit_members(request, team_id):
     if request.method == 'POST':
@@ -90,4 +90,4 @@ def edit_members(request, team_id):
         team = Team.objects.get(pk=team_id)
         user = User.objects.get(username=request.user)
         friends= user.friends.exclude(username=user.username)
-        return render(request, "templates/team.html", {"team":team, "friends":friends, "members":team.members.all()})
+        return render(request, "team.html", {"team":team, "friends":friends, "members":team.members.all()})
