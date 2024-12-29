@@ -1,8 +1,13 @@
+import json
+
 from django.db import IntegrityError
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.contrib.auth import login, authenticate, logout
+from django.template.backends.utils import csrf_input
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
+
 from .models import User, Team
 
 
@@ -83,11 +88,23 @@ def create_team(request):
         friends = user.friends.exclude(username=user.username)
         return render(request, "create.html", {"friends":friends})
 
-def edit_members(request, team_id):
+@csrf_exempt
+def edit_members(request,team_name,):
     if request.method == 'POST':
-        pass
+        data=json.loads(request.body)
+        team=Team.objects.get(name=team_name)
+        if "remove" in data:
+            try:
+                user = User.objects.get(username=data["remove"])
+                team.members.remove(user)
+                team.save()
+                return JsonResponse({"message":"User removed"})
+            except User.DoesNotExist:
+                return JsonResponse({"message": "User does not exist."}, status=400)
+        else:
+            return JsonResponse({"message":"Invalid request."}, status=400)
     else:
-        team = Team.objects.get(pk=team_id)
+        team = Team.objects.get(name=team_name)
         user = User.objects.get(username=request.user)
         friends= user.friends.exclude(username=user.username)
         return render(request, "team.html", {"team":team, "friends":friends, "members":team.members.all()})
