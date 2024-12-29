@@ -101,8 +101,14 @@ def edit_members(request,team_name,):
                 return JsonResponse({"message":"User removed"})
             except User.DoesNotExist:
                 return JsonResponse({"message": "User does not exist."}, status=400)
-        else:
-            return JsonResponse({"message":"Invalid request."}, status=400)
+        elif "add" in data:
+            try:
+                user = User.objects.get(username=data["add"])
+                team.members.add(user)
+                team.save()
+                return JsonResponse({"message":"User added"})
+            except User.DoesNotExist:
+                return JsonResponse({"message": "User does not exist."}, status=400)
     else:
         team = Team.objects.get(name=team_name)
         user = User.objects.get(username=request.user)

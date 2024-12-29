@@ -30,14 +30,15 @@
                 <option  value="" disabled selected>Select a friend</option>
                     {% for friend in friends %}
                         {% if friend not in members %}
-                            <option value="{{ friend.id }}" selected>{{ friend }}</option>
+                            <option value="{{ friend.id }}" selected>{{ friend.username }}</option>
                         {% endif %}
                     {% endfor %}
                 </select>
-                <input type="button" value="Add Member" id="add_member" class="btn btn-primary">
+                <input type="button" value="Add Member" id="add_member_button" class="btn btn-primary">
                 </div>
             </div>
-            <div id="current_members" style="margin-top:30px">
+
+        <div id="current_members" style="margin-top:30px">
                 <h3>Current Members:</h3>
                 {% for member in members %}
                     <div class="row" style="justify-content:space-between;margin:30px" id="current_member_row">
