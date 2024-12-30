@@ -7,11 +7,13 @@ class User(AbstractUser):
     friends = models.ManyToManyField('self', related_name='friends', blank=True)
 
 class Task(models.Model):
+    name = models.CharField(max_length=120,default='')
     completed = models.BooleanField(default=False)
     assigned_to = models.ForeignKey('User', on_delete=models.CASCADE, related_name='assigned_tasks')
     deadline = models.DateTimeField()
     priority = models.IntegerField(default=0)
     progress = models.TextField()
+    description = models.TextField(default='',)
     team=models.ForeignKey('Team', on_delete=models.CASCADE, related_name='tasks',default=None)
 
 class Team(models.Model):

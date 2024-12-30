@@ -6,17 +6,21 @@
     <h6 id ="team_description" style="text-align: center;margin-top:30px">{{ team.description }}</h6>
     <h6 style="text-align: center">Created by: {{ team.creator }}</h6>
     <hr>
+    {% for task in tasks %}
+        {{ task.name }}
+    {% endfor %}
     {% if user in team.admins.all %}
         <div class="container" id="admin_div">
             <h3 style="text-align: center">Admin Controls:</h3>
              <div class="row" style="justify-content:space-around;margin:30px">
                  <button id="edit_members" class = "btn btn-outline-primary">Edit Members</button>
-                 <button id="create_tasks" class = "btn btn-outline-primary">Create Tasks</button>
+                 <button id="create_task" class = "btn btn-outline-primary">Create Task</button>
                  <button id="edit_tasks" class = "btn btn-outline-primary">Edit Tasks</button>
                  <button id="archive_project" class = "btn btn-outline-danger">Archive Project</button>
             </div>
         </div>
     {% endif %}
+
 
 
     <! Code below is initially hidden from the screen and is only displayed using JS after an admin clicks on one of the buttons -->
@@ -51,9 +55,45 @@
                     </div>
                     <hr>
                 {% endfor %}
-                <hr>
             </div>
         </div>
-</div>
+
+        <div id="create_tasks" style="text-align: center;border:0.1px solid grey;border-radius: 10px;padding: 10px; display:none">
+            <form id="create_task_form" action="{% url 'create_task' team.name  %}" method="POST">
+            {% csrf_token %}
+                <h3>Create Task:</h3>
+                <div class="form-group" style="text-align: left">
+                    <h6 >Task Name:</h6>
+                    <input type="text" class="form-control" id="task_name" name="task_name" placeholder="Enter Task Name" required>
+                </div>
+                <div class="form-group" style="text-align: left">
+                    <h6>Task Description:</h6>
+                    <input type="text" class="form-control" id="task_description" name="task_description" placeholder="Enter Task Description" required>
+                </div>
+                <div class="form-group" style="text-align: left">
+                    <h6>Task Priority:</h6>
+                    <input type="number" min=1 max="5" id="task_priority" name="task_priority" placeholder="Enter Task Priority" required style="width:25%">
+                    <p style="color:grey;font-size: 12px">1:Low Priority Task - 5:Max Priority Task</p>
+                </div>
+                <div class="form-group" style="text-align: left">
+                    <h6>Assign To:</h6>
+                    <select class="form-control" id="assigned_to" name="assigned_to">
+                    <option value="" disabled selected>Select a friend</option>
+                        {% for member in members %}
+                            <option value="{{ member.username }}">{{ member.username }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group" style="text-align: left">
+                    <h6>Deadline:</h6>
+                    <input id="task_deadline" class="form-control" type="date" name="task_deadline" required>
+                </div>
+                <div class="form-group" style="text-align: left">
+                    <input type="submit" value="Create Task" id="create_task_button" class="btn btn-primary"></input>
+                </div>
+            </form>
+    </div>
+    </div>
+
     <script src="{%  static '../static/team.js' %}"> </script>
 {% endblock %}

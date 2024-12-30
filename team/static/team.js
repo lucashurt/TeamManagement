@@ -3,17 +3,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const addMembersSelector = document.getElementById('add_member_select');
     const addMemberButton = document.getElementById('add_member_button');
 
-    document.querySelector("#edit_members").addEventListener('click', ()=> {
-    const edit = document.getElementById('edit_container');
-    if (edit.style.display === 'none') {
-        edit.style.display = "block";
-    }
-    else {
-        edit.style.display = "none";
-    }
+    document.querySelector("#edit_members").addEventListener('click', () => {
+        const edit = document.getElementById('edit_container');
+        if (edit.style.display === 'none') {
+            edit.style.display = "block";
+            createTaskContainer.style.display = "none";
+        } else {
+            edit.style.display = "none";
+        }
     })
-    currentMembersContainer.addEventListener('click', function(e) {
-        if(e.target.id === 'delete_member') {
+    currentMembersContainer.addEventListener('click', function (e) {
+        if (e.target.id === 'delete_member') {
             const username = e.target.getAttribute('data-username');
             e.target.parentElement.remove();
             removeMember(username);
@@ -21,11 +21,21 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     addMemberButton.addEventListener('click', () => {
         const selectedOption = addMembersSelector.options[addMembersSelector.selectedIndex];
-        const username =selectedOption.textContent;
+        const username = selectedOption.textContent;
         const userID = selectedOption.value;
-        addMember(username,userID)})
+        addMember(username, userID)
+    })
 
-    document.querySelector("#create_tasks").addEventListener('click', ()=>console.log("add"))
+    document.querySelector("#create_task").addEventListener('click', () =>{
+        const createTaskContainer = document.getElementById('create_tasks');
+
+        if (createTaskContainer.style.display === 'none') {
+            createTaskContainer.style.display = "block";
+            currentMembersContainer.style.display = "none";
+        } else {
+            createTaskContainer.style.display = "none";
+        }
+    })
     document.querySelector("#edit_tasks").addEventListener('click', ()=>console.log("delete"))
     document.querySelector("#archive_project").addEventListener('click', ()=>console.log("delete"))
 })

@@ -8,7 +8,7 @@ from django.template.backends.utils import csrf_input
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import User, Team
+from .models import User, Team, Task
 
 
 # Create your views here.
@@ -111,6 +111,23 @@ def edit_members(request,team_name,):
                 return JsonResponse({"message": "User does not exist."}, status=400)
     else:
         team = Team.objects.get(name=team_name)
+        tasks = Task.objects.filter(team=team)
         user = User.objects.get(username=request.user)
         friends= user.friends.exclude(username=user.username)
-        return render(request, "team.html", {"team":team, "friends":friends, "members":team.members.all()})
+        return render(request, "team.html", {"team":team, "friends":friends, "tasks":tasks,"members":team.members.all()})
+
+def create_task(request,team_name):
+    if request.method == 'POST':
+        team=Team.objects.get(name=team_name)
+        task_name = request.POST['task_name']
+        task_description = request.POST['task_description']
+        task_deadline = request.POST['task_deadline']
+        task_priority = request.POST['task_priority']
+        assigned_to = request.POST['assigned_to']
+        user = User.objects.get(username=assigned_to)
+
+        task=Task.objects.create(name=task_name,description=task_description,deadline=task_deadline,priority=task_priority,team=team,assigned_to=user)
+        task.save()
+        team.tasks.add(task)
+        team.save()
+        return HttpResponseRedirect(reverse("create_team"))
