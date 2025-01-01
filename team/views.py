@@ -130,4 +130,38 @@ def create_task(request,team_name):
         task.save()
         team.tasks.add(task)
         team.save()
-        return HttpResponseRedirect(reverse("create_team"))
+        return HttpResponseRedirect(reverse("edit_members",args=[team_name,]))
+
+def profile(request,username):
+    if request.method == 'POST':
+        pass
+    else:
+        user = User.objects.get(username=username)
+        return render(request,"profile.html",{"profile_user":user})
+
+def friend_request(request,username):
+    user=User.objects.get(username=username)
+    user.friend_requests.add(request.user)
+    user.save()
+    return HttpResponseRedirect(reverse("profile",args=[username]))
+
+@csrf_exempt
+def remove_friend_request(request,username):
+    user=User.objects.get(username=username)
+    user.friend_requests.remove(request.user)
+    user.save()
+    return HttpResponseRedirect(reverse("profile",args=[username]))
+
+@csrf_exempt
+def accept_friend_request(request,username):
+    user=User.objects.get(username=username)
+    user.friend_requests.remove(request.user)
+    user.friends.add(request.user)
+    user.save()
+    return JsonResponse({"message":"friend request accepted"})
+
+def remove_friend(request,username):
+    user=User.objects.get(username=username)
+    user.friends.remove(request.user)
+    user.save()
+    return HttpResponseRedirect(reverse("profile",args=[username]))

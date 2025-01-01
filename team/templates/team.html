@@ -1,10 +1,10 @@
 {% extends "layout.html" %}
 {% load static %}
-{% block title %} Index {% endblock %}
+{% block title %} {{ team.name }} {% endblock %}
 {% block body %}
     <h1 id ="team_name" style="text-align: center">{{ team.name }}</h1>
     <h6 id ="team_description" style="text-align: center;margin-top:30px">{{ team.description }}</h6>
-    <h6 style="text-align: center">Created by: {{ team.creator }}</h6>
+    <h6 style="text-align: center">Created by: <a href="{% url 'profile' team.creator.username %}">{{ team.creator }}</a></h6>
     <hr>
     {% for task in tasks %}
         {{ task.name }}
@@ -21,8 +21,6 @@
         </div>
     {% endif %}
 
-
-
     <! Code below is initially hidden from the screen and is only displayed using JS after an admin clicks on one of the buttons -->
 
     <div class="container">
@@ -31,7 +29,7 @@
             <h3>Add Member?</h3>
             <div class="form-row" style="justify-content: center">
                 <select style="width:50%;justify-self:center;" class="form-control" id="add_member_select">
-                <option  value="" disabled selected>Select a friend</option>
+                <option  value="" selected disabled >Select a friend</option>
                     {% for friend in friends %}
                         {% if friend not in members %}
                             <option value="{{ friend.id }}" selected>{{ friend.username }}</option>
@@ -46,7 +44,7 @@
                 <h3>Current Members:</h3>
                 {% for member in members %}
                     <div class="row" style="justify-content:space-between;margin:30px" id="current_member_row">
-                        <span>{{ member.username }}</span>
+                        <a href="{% url 'profile' member.username%}">{{ member.username }}</a>
                         {% if member not in team.admins.all %}
                             <button id="delete_member" class = "btn btn-outline-danger" data-username="{{ member.username }}">Delete Member</button>
                          {% else %}
@@ -56,9 +54,11 @@
                     <hr>
                 {% endfor %}
             </div>
-        </div>
+    </div>
+    </div>
 
-        <div id="create_tasks" style="text-align: center;border:0.1px solid grey;border-radius: 10px;padding: 10px; display:none">
+    <div class="container">
+            <div id="create_tasks" style="text-align: center;border:0.1px solid grey;border-radius: 10px;padding: 10px; display:none">
             <form id="create_task_form" action="{% url 'create_task' team.name  %}" method="POST">
             {% csrf_token %}
                 <h3>Create Task:</h3>
@@ -94,6 +94,7 @@
             </form>
     </div>
     </div>
-
-    <script src="{%  static '../static/team.js' %}"> </script>
+{% endblock %}
+{% block script %}
+    <script src="{%  static 'team.js' %}"> </script>
 {% endblock %}

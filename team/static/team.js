@@ -3,13 +3,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const addMembersSelector = document.getElementById('add_member_select');
     const addMemberButton = document.getElementById('add_member_button');
 
+    const createTaskContainer = document.getElementById('create_tasks');
+    const editContainer = document.getElementById('edit_container');
+
     document.querySelector("#edit_members").addEventListener('click', () => {
-        const edit = document.getElementById('edit_container');
-        if (edit.style.display === 'none') {
-            edit.style.display = "block";
-            createTaskContainer.style.display = "none";
+        if (editContainer.style.display === 'none') {
+            resetAllContainers()
+            editContainer.style.display = "block";
         } else {
-            edit.style.display = "none";
+            editContainer.style.display = "none";
         }
     })
     currentMembersContainer.addEventListener('click', function (e) {
@@ -27,21 +29,25 @@ document.addEventListener('DOMContentLoaded', function() {
     })
 
     document.querySelector("#create_task").addEventListener('click', () =>{
-        const createTaskContainer = document.getElementById('create_tasks');
 
         if (createTaskContainer.style.display === 'none') {
+             resetAllContainers()
             createTaskContainer.style.display = "block";
-            currentMembersContainer.style.display = "none";
         } else {
             createTaskContainer.style.display = "none";
         }
     })
     document.querySelector("#edit_tasks").addEventListener('click', ()=>console.log("delete"))
     document.querySelector("#archive_project").addEventListener('click', ()=>console.log("delete"))
+
+    function resetAllContainers() {
+        editContainer.style.display = 'none';
+        createTaskContainer.style.display = 'none';
+    }
+
 })
 
 function removeMember(username){
-
     let team_name = document.getElementById('team_name').innerText;
     fetch(`/edit_members/${team_name}`,{
         method: 'POST',
@@ -95,5 +101,8 @@ function addMember(username,userID){
 
             const addMemberSelector = document.getElementById('add_member_select');
             addMemberSelector.querySelector(`option[value="${userID}"]`).remove();
+            if (data.error){
+                console.log(data.error)
+            }
         })
 }

@@ -4,6 +4,7 @@
     {% if message %}
     <div class="alert alert-danger alert-dismissible fade show" role="alert">{{ message }}</div>
     {% endif %}
+    <h1>Create Team</h1>
     <form method="POST" action="create_team" style="width: 80%;margin: 10%">
     {% csrf_token %}
         <div class="form-group">

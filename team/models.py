@@ -5,6 +5,8 @@ from django.db import models
 # Create your models here.
 class User(AbstractUser):
     friends = models.ManyToManyField('self', related_name='friends', blank=True)
+    bio = models.TextField()
+    friend_requests = models.ManyToManyField('self', related_name='friend_requests', blank=True)
 
 class Task(models.Model):
     name = models.CharField(max_length=120,default='')
