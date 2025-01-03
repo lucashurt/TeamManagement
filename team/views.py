@@ -14,10 +14,7 @@ from .models import User, Team, Task, FriendRequest
 def index(request):
     if request.user.is_authenticated:
         user = request.user
-        teams=[]
-        for team in Team.objects.all():
-            if team.members.filter(id=user.id).exists():
-                teams.append(team)
+        teams = Team.objects.filter(members=user)
         return render(request, 'index.html', {'teams':teams})
     else:
         return render(request, 'register.html')
@@ -64,9 +61,16 @@ def logout_view(request):
 
 def search(request):
     if request.method == "POST":
-        pass
-    else:
-        return render(request,"search.html")
+        search_term = request.POST['search_term']
+        try:
+            user = User.objects.get(username=search_term)
+            return HttpResponseRedirect(reverse("profile", args=[search_term]))
+        except User.DoesNotExist:
+            teams = Team.objects.filter(members=request.user)
+            return render(request,"index.html",{
+                "teams":teams,
+                "message": "No User with that username was found."
+            })
 
 def create_team(request):
     if request.method == 'POST':

@@ -97,15 +97,21 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg">
         <a class="navbar-brand" href="{% url 'index' %}">
-            <img src="{% static 'logo.png' %}" alt="PrjtMngr Logo">
+            <img src="{% static 'appLogo.png' %}" alt="PrjtMngr Logo">
             PrjctMngr
         </a>
         <div class="ml-auto">
             {% if user.is_authenticated %}
+                <form method="POST" action="{% url 'search' %}">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <input required id="search_bar" name="search_term" class="form-control mr-sm-2" style="width:85%" type="search" placeholder="Search User"  aria-label="Search">
+                        <button class="btn btn-primary" type = "submit"><img style="height:20px;pointer-events:none" src="{% static 'searchLogo.png' %}"></button>
+                    </div>
+                </form>
                 <a>Welcome, {{ user.username|capfirst }}</a>
-                <a href="{% url 'search' %}"><img style ="height:20px" src="{% static 'searchLogo.png' %}"></a>
-                <a href="{% url 'profile' user.username %}" >Profile</a>
                 <a href="{% url 'index' %}">Home</a>
+                <a href="{% url 'profile' user.username %}" >Profile</a>
                 <a href="{% url 'logout' %}">Logout</a>
             {% else %}
                 <a class="links" href="{% url 'login' %}">Login</a>

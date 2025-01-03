@@ -1,6 +1,10 @@
 {% extends "layout.html" %}
 {% block title %} Index {% endblock %}
 {% block body %}
+    {% if message %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">{{ message }}</div>
+    {% endif %}
+
     <h1>Teams</h1>
     {% if teams %}
         {% for team in teams %}
