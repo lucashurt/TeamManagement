@@ -132,6 +132,7 @@ def create_task(request,team_name):
         team.save()
         return HttpResponseRedirect(reverse("edit_members",args=[team_name,]))
 
+@csrf_exempt
 def profile(request,username):
     if request.method == 'POST':
         pass
@@ -196,3 +197,23 @@ def remove_friend(request,username):
     user.friends.remove(request.user)
     user.save()
     return HttpResponseRedirect(reverse("profile",args=[username]))
+
+@csrf_exempt
+def edit_profile(request,feature_changed):
+    user = User.objects.get(username=request.user.username)
+    data = json.loads(request.body)
+    print(data)
+    if feature_changed == "username":
+        try:
+            user.username = data.get("body")
+            user.save()
+            return JsonResponse({"message":"User updated."})
+
+        except IntegrityError:
+            return JsonResponse({"message":"User does not exist."}, status=400)
+    elif feature_changed == "bio":
+        user.bio = data.get("body")
+        user.save()
+        return JsonResponse({"message":"User updated."})
+    else:
+        return JsonResponse({"message":"Invalid feature change"})

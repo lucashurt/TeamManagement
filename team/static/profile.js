@@ -1,6 +1,25 @@
 document.addEventListener('DOMContentLoaded', () => {
     if(document.querySelector("#edit_profile")){
-        document.querySelector("#edit_profile").addEventListener("click", (e) => {console.log("banana!")}
+        document.querySelector("#edit_profile").addEventListener("click", (e) => {
+            const profileInfo = document.querySelector("#profile_info_div");
+            const editProfile = document.querySelector("#edit_profile_div");
+            profileInfo.style.display = "none";
+            editProfile.style.display = "block";
+
+            editProfile.addEventListener("click", function(e) {
+                if(e.target.id === "edit_button"){
+                    let featureChanged = e.target.value
+                    e.target.parentElement.innerHTML = `
+                        <input id ="${featureChanged}_input" placeholder="New ${featureChanged}:">
+                        <button id="save_${featureChanged}" type="submit" class ="btn btn-primary" value= ${featureChanged} >Save</button>`
+                    const saveButton = document.querySelector(`#save_${featureChanged}`)
+                    saveButton.addEventListener("click", () => {
+                        let newContent = document.querySelector(`#${featureChanged}_input`)
+                        editProfileContent(featureChanged, newContent.value)
+                    })
+                }
+            })
+        }
         )}
 
     const requestsContainer = document.querySelector("#friend_requests_container")
@@ -17,6 +36,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     })
 })
+
+function editProfileContent(featureChanged, newContent) {
+    fetch(`/edit_profile/${featureChanged}`,{
+        method: `PUT`,
+        body: JSON.stringify({
+            body: newContent
+        })
+    })
+        .then(res => res.json())
+        .then(() => {
+            const currentUsername = window.location.pathname.split('/').pop();
+           window.location.href = `/profile/${featureChanged === "username" ? newContent : currentUsername}`;
+        })
+}
 
 function removeRequest(username) {
     fetch(`/decline_friend_request/${username}`, {

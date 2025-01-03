@@ -2,6 +2,11 @@
 {% load static %}
 {% block title %} {{ username }} {% endblock %}
 {% block body %}
+    {% if message %}
+         <div class="alert alert-danger alert-dismissible fade show" role="alert">
+         {{message}}
+         </div>
+    {% endif %}
     <div style="text-align:right">
         {% if user.username == profile_user.username %}
             <button id='requests_button' type='button' class="btn btn-outline-primary" data-toggle="modal" data-target="#requests_modal" style="justify-content: right">Friend Requests</button>
@@ -11,8 +16,7 @@
     <div id="profile_info_div" style='justify-items: center; text-align: center;'>
         <h1 id="profile_username">{{ profile_user.username }}</h1>
         <h5 style="font-weight: bold">About Me:</h5>
-        <h6 style = "width:70%;"> {{ profile_user.bio }}</h6>
-
+        <h6 id ="profile_bio" style = "width:70%;"> {{ profile_user.bio }}</h6>
         <div style="justify-content:center" class="row">
              {% if user == profile_user %}
                 <!-- Friend requests button -->
@@ -46,6 +50,23 @@
                 <h5>Friends: </h5><h5 id="friend_count" value="{{ profile_user.friends.count }}">{{ profile_user.friends.count }}</h5>
             </div>
         </div>
+    </div>
+
+    <div id="edit_profile_div" style='; display: none'>
+        <div style='justify-content: space-between;margin:20px' class="row">
+            <h5>Current username: {{ profile_user.username }} </h5>
+            <button id="edit_button"  style="height:40px" value='username'>
+                <img  style="height:20px;pointer-events: none" src="{% static 'editLogo.png' %}" alt="edit logo" value='username'>
+            </button>
+        </div>
+
+        <div style='justify-content: space-between;margin:20px' class="row">
+            <h5 style="width: 80%">Current Bio: {{ profile_user.bio }} </h5>
+            <button id="edit_button"  style="height:40px" value = "bio">
+                <img  style="height:20px;pointer-events: none" src="{% static 'editLogo.png' %}" alt="edit logo" >
+            </button>
+        </div>
+
     </div>
 
 <!-- Modal -->
