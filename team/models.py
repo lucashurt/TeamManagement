@@ -6,7 +6,6 @@ from django.db import models
 class User(AbstractUser):
     friends = models.ManyToManyField('self', related_name='friends', blank=True)
     bio = models.TextField()
-    friend_requests = models.ManyToManyField('self', related_name='friend_requests', blank=True)
 
 class Task(models.Model):
     name = models.CharField(max_length=120,default='')
@@ -27,4 +26,7 @@ class Team(models.Model):
     archived = models.BooleanField(default=False)
     admins = models.ManyToManyField('User', related_name='admins', blank=True)
 
+class FriendRequest(models.Model):
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friend_requests_sent')
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friend_requests_received')
 

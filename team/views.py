@@ -8,7 +8,7 @@ from django.template.backends.utils import csrf_input
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import User, Team, Task
+from .models import User, Team, Task, FriendRequest
 
 
 # Create your views here.
@@ -137,28 +137,48 @@ def profile(request,username):
         pass
     else:
         user = User.objects.get(username=username)
-        return render(request,"profile.html",{"profile_user":user})
+        if(request.user==user):
+            friend_requests = FriendRequest.objects.filter(receiver=user)
+            return render(request,"profile.html",{"profile_user":user,"friend_requests":friend_requests})
+        try:
+            friend_request_received=FriendRequest.objects.get(sender=user)
+        except FriendRequest.DoesNotExist:
+            friend_request_received= None
+        try:
+            friend_request_sent = FriendRequest.objects.get(receiver=user)
+        except FriendRequest.DoesNotExist:
+            friend_request_sent = None
+
+        return render(request,"profile.html",{"profile_user":user,"friend_request_received":friend_request_received,"friend_request_sent":friend_request_sent})
 
 def friend_request(request,username):
-    user=User.objects.get(username=username)
-    user.friend_requests.add(request.user)
-    user.save()
+    receiver=User.objects.get(username=username)
+    friend_request = FriendRequest.objects.create(sender=request.user,receiver=receiver)
+    friend_request.save()
     return HttpResponseRedirect(reverse("profile",args=[username]))
 
 @csrf_exempt
-def remove_friend_request(request,username):
-    user=User.objects.get(username=username)
-    user.friend_requests.remove(request.user)
-    user.save()
+def decline_friend_request(request,username):
+    sender=User.objects.get(username=username)
+    friend_request=FriendRequest.objects.get(sender=sender,receiver=request.user)
+    friend_request.delete()
     return HttpResponseRedirect(reverse("profile",args=[username]))
 
 @csrf_exempt
 def accept_friend_request(request,username):
-    user=User.objects.get(username=username)
-    user.friend_requests.remove(request.user)
-    user.friends.add(request.user)
-    user.save()
+    sender = User.objects.get(username=username)
+    friend_request = FriendRequest.objects.get(sender=sender,receiver=request.user)
+    if friend_request:
+        sender.friends.add(request.user)
+        request.user.friends.add(sender)
+        friend_request.delete()
     return JsonResponse({"message":"friend request accepted"})
+
+def remove_friend_request(request,username):
+    receiver = User.objects.get(username=username)
+    friend_request = FriendRequest.objects.get(sender=request.user,receiver=receiver)
+    friend_request.delete()
+    return HttpResponseRedirect(reverse("profile",args=[username]))
 
 def remove_friend(request,username):
     user=User.objects.get(username=username)

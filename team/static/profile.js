@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 function removeRequest(username) {
-    fetch(`/remove_friend_request/${username}`, {
+    fetch(`/decline_friend_request/${username}`, {
         method: 'POST',
     })
 }
@@ -27,4 +27,10 @@ function acceptRequest(username) {
     fetch(`/accept_friend_request/${username}`, {
         method: 'POST',
     })
+        .then(res => res.json())
+        .then(() => {
+            const profileInfo = document.querySelector("#profile_info_div")
+            const friendsCount = parseInt(profileInfo.querySelector("#friend_count").textContent)
+            profileInfo.querySelector("#friend_count").textContent = friendsCount + 1;
+        })
 }

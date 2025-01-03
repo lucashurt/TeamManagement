@@ -7,36 +7,49 @@
             <button id='requests_button' type='button' class="btn btn-outline-primary" data-toggle="modal" data-target="#requests_modal" style="justify-content: right">Friend Requests</button>
         {% endif %}
     </div>
-    <div style='justify-items: center; text-align: center;'>
+
+    <div id="profile_info_div" style='justify-items: center; text-align: center;'>
         <h1 id="profile_username">{{ profile_user.username }}</h1>
         <h5 style="font-weight: bold">About Me:</h5>
         <h6 style = "width:70%;"> {{ profile_user.bio }}</h6>
 
         <div style="justify-content:center" class="row">
-            {% if user.username == profile_user.username %}
-                <button id="edit_profile" style="margin: 10px" class="btn btn-primary">Edit Profile </button>
+             {% if user == profile_user %}
+                <!-- Friend requests button -->
+                <button id='requests_button' class="btn btn-outline-primary" data-toggle="modal" data-target="#requests_modal">Edit Profile</button>
             {% elif user in profile_user.friends.all %}
+                <!-- Remove Friend button -->
                 <form action="{% url 'remove_friend' profile_user.username %}" method="POST">
                     {% csrf_token %}
-                    <button id="remove_friend" style="margin: 10px" class="btn btn-primary">Remove Friend</button>
+                    <button class="btn btn-danger">Remove Friend</button>
                 </form>
-            {% elif user not in profile_user.friend_requests.all %}
-                <form action="{% url 'friend_request' profile_user.username %}" method="POST">
-                    {% csrf_token %}
-                    <button id="send_friend_request" style="margin: 10px" class="btn btn-primary">Send Friend Request</button>
-                </form>
-            {% elif user in profile_user.friend_requests.all %}
+            {% elif friend_request_sent %}
+                <!-- Cancel Friend Request button -->
                 <form action="{% url 'remove_friend_request' profile_user.username %}" method="POST">
                     {% csrf_token %}
-                    <button id="remove_friend_request" style="margin: 10px" class="btn btn-primary">Remove Friend Request</button>
+                    <button class="btn btn-warning">Cancel Friend Request</button>
                 </form>
-            {% endif %}
-                <h5 style="margin: 10px" >Friends: {{ profile_user.friends.count }}</h5>
+            {% elif friend_request_received %}
+                <!-- Accept Friend Request button -->
+                <form action="{% url 'accept_friend_request' profile_user.username %}" method="POST">
+                    {% csrf_token %}
+                    <button class="btn btn-success">Accept Friend Request</button>
+                </form>
+            {% else %}
+                <!-- Send Friend Request button -->
+                <form action="{% url 'friend_request' profile_user.username %}" method="POST">
+                    {% csrf_token %}
+                    <button class="btn btn-primary">Send Friend Request</button>
+                </form>
+            {% endif %}`
+            <div style="margin:10px" class="row">
+                <h5>Friends: </h5><h5 id="friend_count" value="{{ profile_user.friends.count }}">{{ profile_user.friends.count }}</h5>
+            </div>
         </div>
     </div>
 
 <!-- Modal -->
-<div class="modal fade" id="requests_modal" tabindex="-1" role="dialog" aria-labelledby="requests_modal_label" aria-hidden="true">
+<div class="modal fade" id="requests_modal" tabindex="-1" role="dialog" aria-labelledby="requests_modal_label" >
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -46,12 +59,12 @@
         </button>
       </div>
       <div class="modal-body" id="friend_requests_container">
-          {% for friend_request in user.friend_requests.all %}
+          {% for friend_request in friend_requests %}
           <div class="row" style="justify-content: space-between; margin: 10px;">
-              <a id="request_username" href="{% url 'profile' friend_request.username%}">{{ friend_request.username }}</a>
+              <a id="request_username" href="{% url 'profile' friend_request.sender%}">{{ friend_request.sender }}</a>
             <div class="btn-group" role="group" aria-label="Basic example">
-                <button id="accept_request_button" type="button" class="btn btn-outline-success" data-username="{{ friend_request.username }}">Accept</button>
-                <button id ="decline_request_button" type="button" class="btn btn-outline-danger" data-username="{{ friend_request.username }}">Decline</button>
+                <button id="accept_request_button" type="button" class="btn btn-outline-success" data-username="{{ friend_request.sender }}">Accept</button>
+                <button id ="decline_request_button" type="button" class="btn btn-outline-danger" data-username="{{ friend_request.sender }}">Decline</button>
             </div>
           </div>
               <hr>
@@ -63,6 +76,7 @@
       </div>
     </div>
 </div>
+
 {% for team in teams %}
     {% endfor %}
 {% endblock %}
