@@ -24,7 +24,7 @@ function removeRequest(username) {
     })
 }
 function acceptRequest(username) {
-    fetch(`/accept_friend_request/${username}`, {
+    fetch(`/accept_friend_request_from_requests/${username}`, {
         method: 'POST',
     })
         .then(res => res.json())

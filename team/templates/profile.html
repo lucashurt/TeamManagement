@@ -16,7 +16,7 @@
         <div style="justify-content:center" class="row">
              {% if user == profile_user %}
                 <!-- Friend requests button -->
-                <button id='requests_button' class="btn btn-outline-primary" data-toggle="modal" data-target="#requests_modal">Edit Profile</button>
+                <button id="edit_profile" class="btn btn-outline-primary" >Edit Profile</button>
             {% elif user in profile_user.friends.all %}
                 <!-- Remove Friend button -->
                 <form action="{% url 'remove_friend' profile_user.username %}" method="POST">

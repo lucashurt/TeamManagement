@@ -140,12 +140,13 @@ def profile(request,username):
         if(request.user==user):
             friend_requests = FriendRequest.objects.filter(receiver=user)
             return render(request,"profile.html",{"profile_user":user,"friend_requests":friend_requests})
+
         try:
-            friend_request_received=FriendRequest.objects.get(sender=user)
+            friend_request_received=FriendRequest.objects.get(sender=user,receiver=request.user)
         except FriendRequest.DoesNotExist:
-            friend_request_received= None
+            friend_request_received = None
         try:
-            friend_request_sent = FriendRequest.objects.get(receiver=user)
+            friend_request_sent = FriendRequest.objects.get(receiver=user,sender=request.user)
         except FriendRequest.DoesNotExist:
             friend_request_sent = None
 
@@ -166,6 +167,16 @@ def decline_friend_request(request,username):
 
 @csrf_exempt
 def accept_friend_request(request,username):
+    sender = User.objects.get(username=username)
+    friend_request = FriendRequest.objects.get(sender=sender,receiver=request.user)
+    if friend_request:
+        sender.friends.add(request.user)
+        request.user.friends.add(sender)
+        friend_request.delete()
+    return HttpResponseRedirect(reverse("profile", args=[username]))
+
+@csrf_exempt
+def accept_friend_request_from_requests(request,username):
     sender = User.objects.get(username=username)
     friend_request = FriendRequest.objects.get(sender=sender,receiver=request.user)
     if friend_request:
