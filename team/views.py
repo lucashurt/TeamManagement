@@ -4,7 +4,6 @@ from django.db import IntegrityError
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.contrib.auth import login, authenticate, logout
-from django.template.backends.utils import csrf_input
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
@@ -63,18 +62,23 @@ def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("login"))
 
+def search(request):
+    if request.method == "POST":
+        pass
+    else:
+        return render(request,"search.html")
+
 def create_team(request):
     if request.method == 'POST':
         user=User.objects.get(username=request.user.username)
         team_name = request.POST['team_name']
         friends = request.POST.getlist('friends')
         team_description = request.POST['project_description']
-        team_deadline = request.POST['project_deadline']
         members= [user]
         for friend in friends:
             members.append(User.objects.get(username=friend))
         try:
-            team = Team.objects.create(name=team_name,creator=user,description=team_description,deadline=team_deadline)
+            team = Team.objects.create(name=team_name,creator=user,description=team_description)
             team.members.set(members)
             team.admins.add(user)
             team.save()

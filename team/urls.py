@@ -9,6 +9,7 @@ urlpatterns = [
 
     path('profile/<str:username>', views.profile, name='profile'),
     path('create_team', views.create_team, name='create_team'),
+    path('search', views.search, name='search'),
     path('create_task/<str:team_name>', views.create_task, name='create_task'),
     path('edit_members/<str:team_name>', views.edit_members, name='edit_members'),
     path('friend_request/<str:username>', views.friend_request, name='friend_request'),

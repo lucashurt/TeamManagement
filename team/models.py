@@ -21,7 +21,6 @@ class Team(models.Model):
     name = models.CharField(max_length=50, unique=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='teams_created',null=True)
     members = models.ManyToManyField('User', related_name='teams', blank=True)
-    deadline = models.DateField(default=datetime.date.today)
     description = models.TextField(blank=True,default='')
     archived = models.BooleanField(default=False)
     admins = models.ManyToManyField('User', related_name='admins', blank=True)
