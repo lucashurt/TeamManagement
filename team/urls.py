@@ -20,5 +20,6 @@ urlpatterns = [
     path('accept_friend_request_from_requests/<str:username>', views.accept_friend_request_from_requests, name='accept_friend_request_from_requests'),
     path('remove_friend/<str:username>', views.remove_friend, name='remove_friend'),
     path('edit_profile/<str:feature_changed>', views.edit_profile, name='edit_profile'),
-    path('report_progress/<str:task>', views.report_progress, name='report_progress'),
+    path('task/<int:task_id>', views.task, name='task'),
+    path('report_progress/<int:task_id>/<str:feature_changed>', views.report_progress, name='report_progress'),
 ]

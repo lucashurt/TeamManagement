@@ -10,12 +10,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 if(e.target.id === "edit_button"){
                     let featureChanged = e.target.value
                     e.target.parentElement.innerHTML = `
-                        <input id ="${featureChanged}_input" placeholder="New ${featureChanged}:">
+                        <input required id ="${featureChanged}_input" placeholder="New ${featureChanged}:">
                         <button id="save_${featureChanged}" type="submit" class ="btn btn-primary" value= ${featureChanged} >Save</button>`
                     const saveButton = document.querySelector(`#save_${featureChanged}`)
                     saveButton.addEventListener("click", () => {
-                        let newContent = document.querySelector(`#${featureChanged}_input`)
-                        editProfileContent(featureChanged, newContent.value)
+                        let newContent = document.querySelector(`#${featureChanged}_input`).value;
+                        if(newContent){
+                            editProfileContent(featureChanged, newContent)
+                        }
+                        else{
+                            console.log("ERROR:MUST INPUT INFORMATION")
+                        }
                     })
                 }
             })

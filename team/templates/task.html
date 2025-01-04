@@ -3,13 +3,50 @@
 {% block title %} {{ task.name }} {% endblock %}
 {% block body %}
     {% if user in task.team.members.all %}
-        {{ task.name }}
+        <div style='justify-items: center; text-align: center;'>
+            <h1>{{ task.name }}</h1>
+            <h3 style="font-weight: bold; text-align: center">Task Goal:</h3>
+            <h5 style="text-align:center;width: 60%">{{ task.description }} by {{ task.deadline|date:"m/j/Y"}}</h5>
+            <h5 style="text-align: center">Assigned To: <a href="{% url 'profile' task.assigned_to.username %}">{{ task.assigned_to.username }}</a></h5>
+        </div>
+        <hr>
+        <h3 style="text-align: center;margin:30px;font-weight: bold">Progress Report</h3>
+
+        <div id="progress_div">
+            <div class = "row" style="justify-content: space-around;">
+                <h5 style="width:80%"> <strong> Last Update: </strong> {{ task.progress_description }}</h5>
+                {% if task.assigned_to == user %}
+                     <button id="edit_button"  style="height:40px" class="btn btn-outline-primary" value="progress_description">
+                         <img  style="height:20px;pointer-events: none" src="{% static 'editLogo.png' %}" alt="edit logo">
+                     </button>
+                 {% endif %}
+            </div>
+            <div class = "row" style="justify-content: space-around; margin-top: 10px;">
+                <h5 style="width:80%"> <strong> Estimated Progress Percentage:</strong> {{ task.progress }}%</h5>
+                    {% if task.assigned_to == user %}
+                         <button id="edit_button"  style="height:40px" class="btn btn-outline-primary" value="progress">
+                             <img  style="height:20px;pointer-events: none" src="{% static 'editLogo.png' %}" alt="edit logo">
+                         </button>
+                     {% endif %}
+            </div>
+        </div>
+        <div class = "row" style="justify-content: right; margin:2%">
+            <form action="{% url 'team' task.team.name %}" method="post">
+                {% csrf_token %}
+                <button class = "btn btn-success" style= "height:40px;justify-content: right">Back to Team</button>
+             </form>
+        </div>
+
+
+
     {% else %}
         <div class = "alert alert-danger">
             You do not have permission to access this page without being a part of the team first.
         </div>
-
     {% endif %}
 
+{% endblock %}
 
+{% block script %}
+    <script src="{%  static 'task.js' %}"> </script>
 {% endblock %}

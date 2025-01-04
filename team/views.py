@@ -63,7 +63,6 @@ def search(request):
     if request.method == "POST":
         search_term = request.POST['search_term']
         try:
-            user = User.objects.get(username=search_term)
             return HttpResponseRedirect(reverse("profile", args=[search_term]))
         except User.DoesNotExist:
             teams = Team.objects.filter(members=request.user)
@@ -99,16 +98,23 @@ def create_team(request):
 def team(request,team_name):
     team = Team.objects.get(name=team_name)
     user = User.objects.get(username=request.user)
-    friends = user.friends.exclude(username=user.username)
-    tasks = []
 
-    for task in Task.objects.filter(team=team, completed=False):
-        tasks.append(task)
-    for task in Task.objects.filter(team=team, completed=True):
-        tasks.append(task)
+    if user in team.members.all():
+        friends = user.friends.exclude(username=user.username)
+        tasks = []
+        for task in Task.objects.filter(team=team, completed=False):
+            tasks.append(task)
+        for task in Task.objects.filter(team=team, completed=True):
+            tasks.append(task)
+        return render(request, "team.html",
+                      {"team": team, "friends": friends, "tasks": tasks, "members": team.members.all()})
 
-    return render(request, "team.html",
-                  {"team": team, "friends": friends, "tasks": tasks, "members": team.members.all()})
+    else:
+        teams = Team.objects.filter(members=request.user)
+        return render(request, "index.html", {
+            "teams": teams,
+            "message": "You are not a member of that team."
+        })
 
 
 @csrf_exempt
@@ -232,9 +238,29 @@ def edit_profile(request,feature_changed):
     else:
         return JsonResponse({"message":"Invalid feature change"})
 
-def report_progress(request,task):
-    if request.method == 'POST':
-         pass
-    else:
-        task =Task.objects.get(name=task)
+def task(request,task_id):
+    task =Task.objects.get(pk=task_id)
+    if request.user in task.team.members.all():
         return render(request,"task.html",{"task":task})
+    else:
+        teams = Team.objects.filter(members=request.user)
+        return render(request, "index.html", {
+            "teams": teams,
+            "message": "You are not permitted to be view that task."
+        })
+
+@csrf_exempt
+def report_progress(request,task_id,feature_changed):
+    task = Task.objects.get(id=task_id)
+    data = json.loads(request.body)
+
+    if feature_changed == "progress":
+        task.progress = data.get("body")
+        task.save()
+        return JsonResponse({"message": "Task updated."})
+    elif feature_changed == "progress_description":
+        task.progress_description = data.get("body")
+        task.save()
+        return JsonResponse({"message": "Task updated."})
+    else:
+        return JsonResponse({"message": "Invalid feature change"})
