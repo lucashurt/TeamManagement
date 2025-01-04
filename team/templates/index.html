@@ -13,7 +13,7 @@
                     <h5 class="card-title">{{ team.name }}</h5>
                     <p class="card-text">Created by <a href ="{% url 'profile' team.creator.username %}">{{ team.creator }}</a> </p>
                 </div>
-                <form action="edit_members/{{ team.name }}" style="text-align: center">
+                <form action="team/{{ team.name }}" style="text-align: center">
                     <input style="width:100%;" type="submit" class="btn btn-outline-primary" value="Visit Team">
                 </form>
             </div>

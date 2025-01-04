@@ -10,7 +10,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     adminButton.addEventListener('click', () => {
         if (adminDiv.style.display === "none") {adminDiv.style.display = "block";}
-        else adminDiv.style.display = "none";
+        else {adminDiv.style.display = "none";
+                resetAllContainers()
+}
     })
 
     document.querySelector("#edit_members").addEventListener('click', () => {

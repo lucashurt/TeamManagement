@@ -2,10 +2,14 @@
 {% load static %}
 {% block title %} {{ team.name }} {% endblock %}
 {% block body %}
-    <h1 id ="team_name" style="text-align: center">{{ team.name }}</h1>
-    <h6 id ="team_description" style="text-align: center;margin-top:30px">{{ team.description }}</h6>
-    <h6 style="text-align: center">Created by: <a href="{% url 'profile' team.creator.username %}">{{ team.creator }}</a></h6>
-    <hr>
+
+    <div style='justify-items: center; text-align: center;'>
+        <h1 id ="team_name" style="text-align: center">{{ team.name }}</h1>
+        <h3 style="margin-top:30px;font-weight: bold">Project Goal:</h3>
+        <h5 id ="team_description" style="text-align: center;width:60%">{{ team.description }}</h5>
+        <h5 style="text-align: center">Created by: <a href="{% url 'profile' team.creator.username %}">{{ team.creator }}</a></h5>
+        <hr>
+    </div>
 
     {% if user in team.members.all %}
         {% if user in team.admins.all %}
@@ -99,27 +103,36 @@
 
     <div class="container mt-5" >
         <h2 class="text-center mb-4" style="font-weight: bold;">Team Task Dashboard</h2>
+        <h6 class="text-center mb-4" style="color:grey">Report Progress by Clicking Task Name Assigned to You </h6>
         <table class="table table-hover shadow-sm">
             <thead class="thead-light">
                 <tr>
                     <th scope="col">Task Name</th>
                     <th scope="col">Assigned To</th>
                     <th scope="col">Priority</th>
-                    <th scope="col">Progress</th>
                     <th scope="col">Deadline</th>
-                    <th scope="col">Status</th>
+                    <th scope="col">Progress</th>
                 </tr>
             </thead>
             <tbody>
                 {% for task in tasks %}
                 <tr>
-                    <td>{{ task.name }}</td>
+                    <td style="justify-content: space-around"> {{ task.name|capfirst }}
+                        {% if task.assigned_to == user %}
+                            <form action="{% url 'report_progress' task.name %}" >
+                                <button id="edit_button"  style="height:30px">
+                                    <img  style="height:15px;pointer-events: none" src="{% static 'editLogo.png' %}" alt="edit logo" >
+                                </button>
+                            </form>
+                        {% endif %}
+                    </td>
                     <td> <a href="{% url 'profile' task.assigned_to.username %}">{{ task.assigned_to.username }}</a></td>
                     <td>
-                        <span class="badge badge-{% if task.priority > 3 %}danger{% else %}info{% endif %}">
+                        <span class="badge badge-{% if task.priority > 3 %}danger{% elif task.priority > 1 %}info{% else %}success{% endif %}">
                             {{ task.priority }}
                         </span>
                     </td>
+                    <td>{{ task.deadline|date:"m/j/Y" }}</td>
                     <td>
                         <div class="progress" style="height: 10px;">
                             <div class="progress-bar {% if task.completed %}bg-success{% else %}bg-primary{% endif %}"
@@ -129,12 +142,6 @@
                             </div>
                         </div>
                         <small>{{ task.progress }}%</small>
-                    </td>
-                    <td>{{ task.deadline|date:"M j, Y, g:i a" }}</td>
-                    <td>
-                        <span class="badge badge-{% if task.completed %}success{% else %}warning{% endif %}">
-                            {% if task.completed %}Completed{% else %}In Progress{% endif %}
-                        </span>
                     </td>
                 </tr>
                 {% endfor %}

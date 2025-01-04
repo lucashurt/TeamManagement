@@ -96,6 +96,21 @@ def create_team(request):
         friends = user.friends.exclude(username=user.username)
         return render(request, "create.html", {"friends":friends})
 
+def team(request,team_name):
+    team = Team.objects.get(name=team_name)
+    user = User.objects.get(username=request.user)
+    friends = user.friends.exclude(username=user.username)
+    tasks = []
+
+    for task in Task.objects.filter(team=team, completed=False):
+        tasks.append(task)
+    for task in Task.objects.filter(team=team, completed=True):
+        tasks.append(task)
+
+    return render(request, "team.html",
+                  {"team": team, "friends": friends, "tasks": tasks, "members": team.members.all()})
+
+
 @csrf_exempt
 def edit_members(request,team_name,):
     if request.method == 'POST':
@@ -117,12 +132,6 @@ def edit_members(request,team_name,):
                 return JsonResponse({"message":"User added"})
             except User.DoesNotExist:
                 return JsonResponse({"message": "User does not exist."}, status=400)
-    else:
-        team = Team.objects.get(name=team_name)
-        tasks = Task.objects.filter(team=team)
-        user = User.objects.get(username=request.user)
-        friends= user.friends.exclude(username=user.username)
-        return render(request, "team.html", {"team":team, "friends":friends, "tasks":tasks,"members":team.members.all()})
 
 def create_task(request,team_name):
     if request.method == 'POST':
@@ -222,3 +231,10 @@ def edit_profile(request,feature_changed):
         return JsonResponse({"message":"User updated."})
     else:
         return JsonResponse({"message":"Invalid feature change"})
+
+def report_progress(request,task):
+    if request.method == 'POST':
+         pass
+    else:
+        task =Task.objects.get(name=task)
+        return render(request,"task.html",{"task":task})

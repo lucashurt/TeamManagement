@@ -13,7 +13,8 @@ class Task(models.Model):
     assigned_to = models.ForeignKey('User', on_delete=models.CASCADE, related_name='assigned_tasks')
     deadline = models.DateTimeField()
     priority = models.IntegerField(default=0)
-    progress = models.TextField()
+    progress = models.IntegerField(default=0)
+    progress_description = models.TextField()
     description = models.TextField(default='',)
     team=models.ForeignKey('Team', on_delete=models.CASCADE, related_name='tasks',default=None)
 

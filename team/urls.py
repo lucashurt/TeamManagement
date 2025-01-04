@@ -11,6 +11,7 @@ urlpatterns = [
     path('create_team', views.create_team, name='create_team'),
     path('search', views.search, name='search'),
     path('create_task/<str:team_name>', views.create_task, name='create_task'),
+    path('team/<str:team_name>', views.team, name='team'),
     path('edit_members/<str:team_name>', views.edit_members, name='edit_members'),
     path('friend_request/<str:username>', views.friend_request, name='friend_request'),
     path('decline_friend_request/<str:username>', views.decline_friend_request, name='decline_friend_request'),
@@ -19,5 +20,5 @@ urlpatterns = [
     path('accept_friend_request_from_requests/<str:username>', views.accept_friend_request_from_requests, name='accept_friend_request_from_requests'),
     path('remove_friend/<str:username>', views.remove_friend, name='remove_friend'),
     path('edit_profile/<str:feature_changed>', views.edit_profile, name='edit_profile'),
-
+    path('report_progress/<str:task>', views.report_progress, name='report_progress'),
 ]

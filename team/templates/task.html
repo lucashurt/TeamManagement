@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %} {{ task.name }} {% endblock %}
+{% block body %}
+    {% if user in task.team.members.all %}
+        {{ task.name }}
+    {% else %}
+        <div class = "alert alert-danger">
+            You do not have permission to access this page without being a part of the team first.
+        </div>
+
+    {% endif %}
+
+
+{% endblock %}
