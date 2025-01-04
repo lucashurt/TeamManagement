@@ -5,6 +5,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const createTaskContainer = document.getElementById('create_tasks');
     const editContainer = document.getElementById('edit_container');
+    const adminButton = document.getElementById('admin_button');
+    const adminDiv = document.getElementById('admin_div');
+
+    adminButton.addEventListener('click', () => {
+        if (adminDiv.style.display === "none") {adminDiv.style.display = "block";}
+        else adminDiv.style.display = "none";
+    })
 
     document.querySelector("#edit_members").addEventListener('click', () => {
         if (editContainer.style.display === 'none') {

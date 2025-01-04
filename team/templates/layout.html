@@ -69,6 +69,61 @@
             margin: 20px auto;
             max-width: 80%;
         }
+        .table {
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+        }
+
+        .thead-light th {
+            background-color: #d9ecff; /* Light blue color */
+            text-transform: uppercase;
+            font-weight: bold;
+            color: #333;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .table td, .table th {
+            padding: 12px 15px;
+            border-right: 1px solid #dee2e6;
+        }
+
+        .table td:last-child, .table th:last-child {
+            border-right: none;
+        }
+
+        .badge-info {
+            background-color: #007bff;
+        }
+
+        .badge-danger {
+            background-color: #dc3545;
+        }
+
+        .badge-success {
+            background-color: #28a745;
+        }
+
+        .badge-warning {
+            background-color: #ffc107;
+            color: #000;
+        }
+
+        .progress-bar.bg-primary {
+            background-color: #4a90e2;
+        }
+
+        .progress-bar.bg-success {
+            background-color: #28a745;
+        }
 
         /* Footer styling */
         footer {
@@ -100,16 +155,16 @@
             <img src="{% static 'appLogo.png' %}" alt="PrjtMngr Logo">
             PrjctMngr
         </a>
-        <div class="ml-auto">
+        <div class="ml-auto" >
             {% if user.is_authenticated %}
                 <form method="POST" action="{% url 'search' %}">
                     {% csrf_token %}
-                    <div class="form-row">
+                    <div class="form-row" style="margin-bottom: 10px">
                         <input required id="search_bar" name="search_term" class="form-control mr-sm-2" style="width:85%" type="search" placeholder="Search User"  aria-label="Search">
                         <button class="btn btn-primary" type = "submit"><img style="height:20px;pointer-events:none" src="{% static 'searchLogo.png' %}"></button>
                     </div>
                 </form>
-                <a>Welcome, {{ user.username|capfirst }}</a>
+                <a>Welcome, {{ user.username }}</a>
                 <a href="{% url 'index' %}">Home</a>
                 <a href="{% url 'profile' user.username %}" >Profile</a>
                 <a href="{% url 'logout' %}">Logout</a>

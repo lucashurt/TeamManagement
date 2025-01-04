@@ -142,9 +142,6 @@ def create_task(request,team_name):
 
 @csrf_exempt
 def profile(request,username):
-    if request.method == 'POST':
-        pass
-    else:
         user = User.objects.get(username=username)
         if(request.user==user):
             friend_requests = FriendRequest.objects.filter(receiver=user)
