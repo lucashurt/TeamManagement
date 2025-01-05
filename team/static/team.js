@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const addMembersSelector = document.getElementById('add_member_select');
     const addMemberButton = document.getElementById('add_member_button');
 
+
     const createTaskContainer = document.getElementById('create_tasks');
     const editContainer = document.getElementById('edit_container');
     const adminButton = document.getElementById('admin_button');
@@ -46,7 +47,16 @@ document.addEventListener('DOMContentLoaded', function() {
             createTaskContainer.style.display = "none";
         }
     })
-    document.querySelector("#edit_tasks").addEventListener('click', ()=>console.log("delete"))
+
+    const editTaskContainer = document.getElementById('edit_tasks_container');
+    editTaskContainer.addEventListener('click', function(e) {
+        if (e.target.id === 'delete_task_button') {
+            let taskId = e.target.getAttribute("data-id");
+            e.target.parentElement.parentElement.remove();
+            deleteTask(taskId);
+        }
+    })
+
     document.querySelector("#archive_project").addEventListener('click', ()=>console.log("delete"))
 
     function resetAllContainers() {
@@ -113,5 +123,15 @@ function addMember(username,userID){
             if (data.error){
                 console.log(data.error)
             }
+        })
+}
+function deleteTask(taskId){
+    fetch(`/delete_task/${taskId}`,{
+        method: 'POST',
+    })
+        .then(res => res.json())
+        .then(() => {
+            const taskTable = document.querySelector('#task_table');
+            document.querySelector(`#task_${taskId}`).remove();
         })
 }

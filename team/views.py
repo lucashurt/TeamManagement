@@ -16,7 +16,6 @@ def index(request):
         user = request.user
         teams = Team.objects.filter(members=user,archived=False)
         tasks= Task.objects.filter(assigned_to=user)
-
         return render(request, 'index.html', {'teams':teams,"tasks":tasks})
     else:
         return render(request, 'register.html')
@@ -268,3 +267,9 @@ def report_progress(request,task_id,feature_changed):
         return JsonResponse({"message": "Task updated."})
     else:
         return JsonResponse({"message": "Invalid feature change"})
+
+@csrf_exempt
+def delete_task(request,task_id):
+    task = Task.objects.get(pk=task_id)
+    task.delete()
+    return JsonResponse({"message": "Task deleted."})
