@@ -41,10 +41,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     })
 })
+function getCSRFToken() {
+    return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+}
 
 function editProfileContent(featureChanged, newContent) {
     fetch(`/edit_profile/${featureChanged}`,{
         method: `PUT`,
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken()
+        },
         body: JSON.stringify({
             body: newContent
         })
@@ -59,11 +66,19 @@ function editProfileContent(featureChanged, newContent) {
 function removeRequest(username) {
     fetch(`/decline_friend_request/${username}`, {
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken()
+        },
     })
 }
 function acceptRequest(username) {
     fetch(`/accept_friend_request_from_requests/${username}`, {
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken()
+        },
     })
         .then(res => res.json())
         .then(() => {

@@ -56,18 +56,24 @@ document.addEventListener('DOMContentLoaded', function() {
             deleteTask(taskId);
         }
     })
-
     function resetAllContainers() {
         editContainer.style.display = 'none';
         createTaskContainer.style.display = 'none';
     }
 
 })
+function getCSRFToken() {
+    return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+}
 
 function removeMember(username){
     let team_name = document.getElementById('team_name').innerText;
     fetch(`/edit_members/${team_name}`,{
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken()  // Add CSRF token here
+        },
         body: JSON.stringify({
             remove: username
         })
@@ -89,6 +95,10 @@ function addMember(username,userID){
     let team_name = document.getElementById('team_name').innerText;
     fetch(`/edit_members/${team_name}`,{
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken()  // Add CSRF token here
+        },
         body: JSON.stringify({
             "add": username
         })
@@ -126,6 +136,11 @@ function addMember(username,userID){
 function deleteTask(taskId){
     fetch(`/delete_task/${taskId}`,{
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken()  // Add CSRF token here
+        },
+
     })
         .then(res => res.json())
         .then(() => {

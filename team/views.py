@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.contrib.auth import login, authenticate, logout
 from django.urls import reverse
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
 from .models import User, Team, Task, FriendRequest
 
@@ -118,7 +118,6 @@ def team(request,team_name):
         })
 
 
-@csrf_exempt
 def edit_members(request,team_name,):
     if request.method == 'POST':
         data=json.loads(request.body)
@@ -156,7 +155,6 @@ def create_task(request,team_name):
         team.save()
         return HttpResponseRedirect(reverse("team",args=[team_name,]))
 
-@csrf_exempt
 def profile(request,username):
         user = User.objects.get(username=username)
         if(request.user==user):
@@ -180,14 +178,12 @@ def friend_request(request,username):
     friend_request.save()
     return HttpResponseRedirect(reverse("profile",args=[username]))
 
-@csrf_exempt
 def decline_friend_request(request,username):
     sender=User.objects.get(username=username)
     friend_request=FriendRequest.objects.get(sender=sender,receiver=request.user)
     friend_request.delete()
     return HttpResponseRedirect(reverse("profile",args=[username]))
 
-@csrf_exempt
 def accept_friend_request(request,username):
     sender = User.objects.get(username=username)
     friend_request = FriendRequest.objects.get(sender=sender,receiver=request.user)
@@ -197,7 +193,6 @@ def accept_friend_request(request,username):
         friend_request.delete()
     return HttpResponseRedirect(reverse("profile", args=[username]))
 
-@csrf_exempt
 def accept_friend_request_from_requests(request,username):
     sender = User.objects.get(username=username)
     friend_request = FriendRequest.objects.get(sender=sender,receiver=request.user)
@@ -219,7 +214,6 @@ def remove_friend(request,username):
     user.save()
     return HttpResponseRedirect(reverse("profile",args=[username]))
 
-@csrf_exempt
 def edit_profile(request,feature_changed):
     user = User.objects.get(username=request.user.username)
     data = json.loads(request.body)
@@ -250,7 +244,6 @@ def task(request,task_id):
             "message": "You are not permitted to be view that task."
         })
 
-@csrf_exempt
 def report_progress(request,task_id,feature_changed):
     task = Task.objects.get(id=task_id)
     data = json.loads(request.body)
@@ -270,7 +263,6 @@ def report_progress(request,task_id,feature_changed):
     else:
         return JsonResponse({"message": "Invalid feature change"})
 
-@csrf_exempt
 def delete_task(request,task_id):
     task = Task.objects.get(pk=task_id)
     task.delete()

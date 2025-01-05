@@ -8,7 +8,7 @@
     <h1>Teams</h1>
     {% if teams %}
         {% for team in teams %}
-            <div class="card-body" style="background: #f0f8ff; border-radius: 10px;margin-bottom: 10px;">
+            <div class="card-body" style="background: #f0f8ff; border-radius: 10px;margin-bottom: 20px; border: 0.1px dodgerblue solid;">
                 <div class="d-flex justify-content-between">
                     <h5 style ="font-weight: bold" class="card-title">{{ team.name }}</h5>
                     <p class="card-text">Created by <a href ="{% url 'profile' team.creator.username %}">{{ team.creator }}</a> </p>

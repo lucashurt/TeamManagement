@@ -34,12 +34,20 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 })
 
+function getCSRFToken() {
+    return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+}
+
 function edit_progress(featureChanged,newContent){
     const urlPath = window.location.pathname;
     const taskId = urlPath.split('/')[2];  // Assuming the URL is /task/<task_id>
     console.log(taskId);
     fetch(`/report_progress/${taskId}/${featureChanged}`,{
         method: `PUT`,
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken()
+        },
         body: JSON.stringify({
             body: newContent
         })
