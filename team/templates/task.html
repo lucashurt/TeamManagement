@@ -15,7 +15,7 @@
         <div id="progress_div">
             <div class = "row" style="justify-content: space-around;">
                 <h5 style="width:80%"> <strong> Last Update: </strong> {{ task.progress_description }}</h5>
-                {% if task.assigned_to == user %}
+                {% if task.assigned_to == user and task.team.archived == False %}
                      <button id="edit_button"  style="height:40px" class="btn btn-outline-primary" value="progress_description">
                          <img  style="height:20px;pointer-events: none" src="{% static 'editLogo.png' %}" alt="edit logo">
                      </button>
@@ -23,7 +23,7 @@
             </div>
             <div class = "row" style="justify-content: space-around; margin-top: 10px;">
                 <h5 style="width:80%"> <strong> Estimated Progress Percentage:</strong> {{ task.progress }}%</h5>
-                    {% if task.assigned_to == user %}
+                    {% if task.assigned_to == user and task.team.archived == False %}
                          <button id="edit_button"  style="height:40px" class="btn btn-outline-primary" value="progress">
                              <img  style="height:20px;pointer-events: none" src="{% static 'editLogo.png' %}" alt="edit logo">
                          </button>

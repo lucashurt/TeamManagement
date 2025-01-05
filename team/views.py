@@ -259,6 +259,8 @@ def report_progress(request,task_id,feature_changed):
         task.progress = data.get("body")
         if task.progress=="100":
             task.completed=True
+        else:
+            task.completed=False
         task.save()
         return JsonResponse({"message": "Task updated."})
     elif feature_changed == "progress_description":
@@ -273,3 +275,17 @@ def delete_task(request,task_id):
     task = Task.objects.get(pk=task_id)
     task.delete()
     return JsonResponse({"message": "Task deleted."})
+
+def archive(request,team_name=""):
+    if request.method == "POST":
+        team = Team.objects.get(name=team_name)
+        team.archived = True
+        team.save()
+        return HttpResponseRedirect(reverse("index"))
+    else:
+        teams = Team.objects.filter(archived=True,members=request.user)
+        tasks = Task.objects.filter(assigned_to=request.user)
+        return render(request,"archived.html",{
+            "teams": teams,
+            "tasks": tasks
+        })

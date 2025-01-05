@@ -12,7 +12,7 @@
     </div>
 
     {% if user in team.members.all %}
-        {% if user in team.admins.all %}
+        {% if user in team.admins.all and team.archived == False %}
             <div style="text-align: right">
             <button id ="admin_button" class="btn btn-outline-primary"> Admin Controls </button>
             </div>
@@ -22,8 +22,11 @@
                      <button id="edit_members" class = "btn btn-outline-primary">Edit Members</button>
                      <button id="create_task" class = "btn btn-outline-primary">Create Task</button>
                      <button id='edit_tasks' type='button' class="btn btn-outline-primary" data-toggle="modal" data-target="#edit_tasks_modal" style="justify-content: right">Edit Tasks</button>
-                     <button id="archive_project" class = "btn btn-outline-danger">Archive Project</button>
-                </div>
+                     <form action="{% url 'archive' team.name %}" method="POST">
+                         {% csrf_token %}
+                        <button id="archive_project" class = "btn btn-outline-danger">Archive Project</button>
+                     </form>
+                 </div>
             </div>
         {% endif %}
 

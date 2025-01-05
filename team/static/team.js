@@ -57,8 +57,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     })
 
-    document.querySelector("#archive_project").addEventListener('click', ()=>console.log("delete"))
-
     function resetAllContainers() {
         editContainer.style.display = 'none';
         createTaskContainer.style.display = 'none';
