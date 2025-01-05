@@ -8,11 +8,29 @@
     <h1>Teams</h1>
     {% if teams %}
         {% for team in teams %}
-            <div class="card mb-3" style="margin: 15px;padding: 15px;">
-                <div class="row" style="justify-content: space-between;margin-left: 15px;margin-right: 15px;">
-                    <h5 class="card-title">{{ team.name }}</h5>
+            <div class="card-body" style="background: #f0f8ff; border-radius: 10px;margin-bottom: 10px;">
+                <div class="d-flex justify-content-between">
+                    <h5 style ="font-weight: bold" class="card-title">{{ team.name }}</h5>
                     <p class="card-text">Created by <a href ="{% url 'profile' team.creator.username %}">{{ team.creator }}</a> </p>
                 </div>
+                <h5 style ="font-weight: bold" > Your Tasks:</h5>
+                {% for task in tasks %}
+                    {% if task.team == team %}
+                        <div class="task-item mb-2">
+                            <div class="d-flex justify-content-between">
+                                <h6 >{{ task.name }}</h6>
+                                <small style="color: #4a90e2;">{{ task.progress }}%</small>
+                            </div>
+                            <div class="progress" style="height: 8px; border-radius: 5px;">
+                                <div class="progress-bar {% if task.completed %}bg-success{% else %}bg-primary{% endif %}"
+                                     role="progressbar"
+                                     style="width: {{ task.progress }}%; border-radius: 5px;"
+                                     aria-valuenow="{{ task.progress }}" aria-valuemin="0" aria-valuemax="100">
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
                 <form action="team/{{ team.name }}" style="text-align: center">
                     <input style="width:100%;" type="submit" class="btn btn-outline-primary" value="Visit Team">
                 </form>

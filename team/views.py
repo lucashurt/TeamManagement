@@ -14,8 +14,10 @@ from .models import User, Team, Task, FriendRequest
 def index(request):
     if request.user.is_authenticated:
         user = request.user
-        teams = Team.objects.filter(members=user)
-        return render(request, 'index.html', {'teams':teams})
+        teams = Team.objects.filter(members=user,archived=False)
+        tasks= Task.objects.filter(assigned_to=user)
+
+        return render(request, 'index.html', {'teams':teams,"tasks":tasks})
     else:
         return render(request, 'register.html')
 
@@ -153,7 +155,7 @@ def create_task(request,team_name):
         task.save()
         team.tasks.add(task)
         team.save()
-        return HttpResponseRedirect(reverse("edit_members",args=[team_name,]))
+        return HttpResponseRedirect(reverse("team",args=[team_name,]))
 
 @csrf_exempt
 def profile(request,username):
@@ -256,6 +258,8 @@ def report_progress(request,task_id,feature_changed):
 
     if feature_changed == "progress":
         task.progress = data.get("body")
+        if task.progress=="100":
+            task.completed=True
         task.save()
         return JsonResponse({"message": "Task updated."})
     elif feature_changed == "progress_description":
