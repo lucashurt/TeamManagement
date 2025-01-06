@@ -2,6 +2,13 @@
 {% load static %}
 {% block title %} {{ task.name }} {% endblock %}
 {% block body %}
+
+    {% if message %}
+         <div class="alert alert-danger alert-dismissible fade show" role="alert">
+         {{message}}
+         </div>
+    {% endif %}
+
     {% if user in task.team.members.all %}
         <div style='justify-items: center; text-align: center;'>
             <h1>{{ task.name }}</h1>

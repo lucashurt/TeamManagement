@@ -64,7 +64,8 @@ def search(request):
     if request.method == "POST":
         search_term = request.POST['search_term']
         try:
-            return HttpResponseRedirect(reverse("profile", args=[search_term]))
+            user = User.objects.get(username=search_term)
+            return HttpResponseRedirect(reverse("profile", args=[user.username]))
         except User.DoesNotExist:
             teams = Team.objects.filter(members=request.user)
             return render(request,"index.html",{
@@ -160,7 +161,6 @@ def profile(request,username):
         if(request.user==user):
             friend_requests = FriendRequest.objects.filter(receiver=user)
             return render(request,"profile.html",{"profile_user":user,"friend_requests":friend_requests})
-
         try:
             friend_request_received=FriendRequest.objects.get(sender=user,receiver=request.user)
         except FriendRequest.DoesNotExist:
@@ -241,7 +241,7 @@ def task(request,task_id):
         teams = Team.objects.filter(members=request.user)
         return render(request, "index.html", {
             "teams": teams,
-            "message": "You are not permitted to be view that task."
+            "message": "You are not permitted to view that task."
         })
 
 def report_progress(request,task_id,feature_changed):

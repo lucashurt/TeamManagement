@@ -18,12 +18,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
             }
             else{
-                e.target.parentElement.innerHTML=`<h5 style="width:80%"> <strong> New Update: </strong> <input id ="progress_input" type="number" min="0" max="100" placeholder = "%"> </h5> <button id="save_progress" class="btn btn-primary"> Save </button> `
+                e.target.parentElement.innerHTML=`<h5 style="width:80%"> <strong> New Update: </strong> <input required id ="progress_input" type="number" min="0" max="100" placeholder = "%"> </h5> <button id="save_progress" class="btn btn-primary"> Save </button> `
                 const saveButton = document.querySelector(`#save_progress`);
                 saveButton.addEventListener("click", () => {
                     let newContent = document.querySelector(`#progress_input`).value;
                     if(newContent){
-                        edit_progress(value, newContent)
+                        if(newContent >= 0 && newContent <=100) {
+                            edit_progress(value, newContent)
+                        }
+                        else{
+                            alert("ERROR:VALUE MUST BE BETWEEN 0 AND 100")
+                        }
                     }
                     else{
                         console.log("ERROR:MUST INPUT INFORMATION")

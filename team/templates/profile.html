@@ -55,14 +55,14 @@
     <div id="edit_profile_div" style='; display: none'>
         <div style='justify-content: space-between;margin:20px' class="row">
             <h5>Current username: {{ profile_user.username }} </h5>
-            <button id="edit_button"  style="height:40px" value='username'>
+            <button id="edit_button"  class="btn btn-outline-primary" style="height:40px" value='username'>
                 <img  style="height:20px;pointer-events: none" src="{% static 'editLogo.png' %}" alt="edit logo" value='username'>
             </button>
         </div>
 
         <div style='justify-content: space-between;margin:20px' class="row">
             <h5 style="width: 80%">Current Bio: {{ profile_user.bio }} </h5>
-            <button id="edit_button"  style="height:40px" value = "bio">
+            <button id="edit_button"  class="btn btn-outline-primary" style="height:40px" value = "bio">
                 <img  style="height:20px;pointer-events: none" src="{% static 'editLogo.png' %}" alt="edit logo" >
             </button>
         </div>
