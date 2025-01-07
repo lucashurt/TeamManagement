@@ -11,7 +11,7 @@ This web application was designed to provide a platform for individuals to creat
 * CSRF Protection - Every single JS Fetch request or API call has CSRF certification to ensure security for users
 
 ### Installating and Running Project
-Run the following in the command line exlucing the bulletpoint numbers
+Run the following in the command line exluding the bulletpoint numbers
 1. python3 -m venv myenv
 2. source myenv/bin/activate
 3. pip install Django
