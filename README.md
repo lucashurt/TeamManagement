@@ -16,6 +16,7 @@ Run the following in the command line exluding the bulletpoint numbers
 2. source myenv/bin/activate
 3. pip install Django
 4. python manage.py runserver
+Then open "http://127.0.0.1:8000/" in a browser
 
 ### Main Files Created
 * views.py: Contains all the view functions responsible for handling user interactions and rendering templates.
