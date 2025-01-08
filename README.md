@@ -11,17 +11,21 @@ This web application was designed to provide a platform for individuals to creat
 * CSRF Protection - Every single JS Fetch request or HTML API call has CSRF certification to ensure security for users
 
 ### Installating and Running Project
-Run the following in the command line exluding the bulletpoint numbers
-
-1.   For windows: python -m virtualenv venv ||
-     For macOS/Linux: python3 -m virtualenv venv
-     
-2.   For Windows: .\venv\Scripts\activate || 
-     For macOS/Linux: source venv/bin/activate
-    
+Run the following in the command line exluding the bulletpoint numbers depending on the Operating System
+##### Windows 
+1. python -m virtualenv venv
+2. .\venv\Scripts\activate
 3. pip install Django
-  
 4. python manage.py runserver
+   
+Then open "http://127.0.0.1:8000/" in a browser
+
+##### MacOS
+1. python3 -m virtualenv venv
+2. source venv/bin/activate
+3. pip install Django
+4. python manage.py runserver
+   
 Then open "http://127.0.0.1:8000/" in a browser
 
 ### Main Files Created
