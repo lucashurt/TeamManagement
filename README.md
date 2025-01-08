@@ -12,9 +12,15 @@ This web application was designed to provide a platform for individuals to creat
 
 ### Installating and Running Project
 Run the following in the command line exluding the bulletpoint numbers
-1. python3 -m venv myenv
-2. source myenv/bin/activate
+
+1.   For windows: python -m virtualenv venv ||
+     For macOS/Linux: python3 -m virtualenv venv
+     
+2.   For Windows: .\venv\Scripts\activate || 
+     For macOS/Linux: source venv/bin/activate
+    
 3. pip install Django
+  
 4. python manage.py runserver
 Then open "http://127.0.0.1:8000/" in a browser
 
